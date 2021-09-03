@@ -2,16 +2,16 @@ package com.meeweel.myapplication.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.meeweel.myapplication.app.App.Companion.getHistoryDao
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.meeweel.myapplication.model.AppState
+import com.meeweel.myapplication.model.data.Weather
 import com.meeweel.myapplication.model.data.convertDtoToModel
 import com.meeweel.myapplication.model.dto.FactDTO
 import com.meeweel.myapplication.model.dto.WeatherDTO
-import com.meeweel.myapplication.model.repository.DetailsRepository
-import com.meeweel.myapplication.model.repository.DetailsRepositoryImpl
-import com.meeweel.myapplication.model.repository.RemoteDataSource
+import com.meeweel.myapplication.model.repository.*
 import java.io.IOException
 
 private const val SERVER_ERROR = "Ошибка сервера"
@@ -20,13 +20,19 @@ private const val CORRUPTED_DATA = "Неполные данные"
 
 class DetailsViewModel(
     val detailsLiveData: MutableLiveData<AppState> = MutableLiveData(),
-    private val detailsRepository: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource())
+    private val detailsRepository: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource()),
+    private val historyRepository: LocalRepository = LocalRepositoryImpl(getHistoryDao())
 ) : ViewModel() {
 
     fun getWeatherFromRemoteSource(lat: Double, lon: Double) {
         detailsLiveData.value = AppState.Loading
         detailsRepository.getWeatherDetailsFromServer(lat, lon, callBack)
     }
+
+    fun saveCityToDB(weather: Weather) {
+        historyRepository.saveEntity(weather)
+    }
+
 
     private val callBack = object : Callback<WeatherDTO> {
 

@@ -13,6 +13,7 @@ import com.meeweel.myapplication.databinding.DetailsFragmentBinding
 import com.meeweel.myapplication.model.data.Weather
 import com.meeweel.myapplication.BuildConfig
 import com.meeweel.myapplication.model.AppState
+import com.meeweel.myapplication.model.data.City
 import com.squareup.picasso.Picasso
 
 import com.meeweel.myapplication.service.DetailsService
@@ -64,7 +65,10 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable<Weather>(BUNDLE_EXTRA) ?: Weather()
         viewModel.detailsLiveData.observe(viewLifecycleOwner) { renderData(it) }
-        viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat, weatherBundle.city.lon)
+        viewModel.getWeatherFromRemoteSource(
+            weatherBundle.city.lat,
+            weatherBundle.city.lon
+        )
     }
 
     private fun renderData(appState: AppState) {
@@ -97,6 +101,7 @@ class DetailsFragment : Fragment() {
                     city.lat.toString(),
                     city.lon.toString()
                 )
+                saveCity(city, weather)
             }
             weather.let {
                 temperatureValue.text = it.temperature.toString()
@@ -118,6 +123,20 @@ class DetailsFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.feelsLike,
+                weather.condition
+            )
+        )
     }
 
     override fun onDestroyView() {
