@@ -13,6 +13,7 @@ import com.meeweel.myapplication.databinding.DetailsFragmentBinding
 import com.meeweel.myapplication.model.data.Weather
 import com.meeweel.myapplication.BuildConfig
 import com.meeweel.myapplication.model.AppState
+import com.squareup.picasso.Picasso
 
 import com.meeweel.myapplication.service.DetailsService
 import com.meeweel.myapplication.service.LATITUDE_EXTRA
@@ -101,6 +102,10 @@ class DetailsFragment : Fragment() {
                 temperatureValue.text = it.temperature.toString()
                 feelsLikeValue.text = it.feelsLike.toString()
                 weatherCondition.text = it.condition
+                Picasso
+                    .get()
+                    .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+                    .into(headerIcon)
             }
         }
     }
