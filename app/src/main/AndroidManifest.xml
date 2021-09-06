@@ -11,6 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+        <provider
+            android:name=".contentpovider.HistoryContentProvider"
+            android:authorities="meeweel.provider"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
