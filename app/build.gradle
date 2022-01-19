@@ -24,6 +24,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "MY_BUILD_TYPE", "\"RELEASE\"")
+            resValue("dimen", "my_size_text", "40sp")
+        }
+        beta {
+            initWith debug
+            versionNameSuffix "-beta"
+            debuggable true
+            buildConfigField("String", "MY_BUILD_TYPE", "\"DEBUG\"")
+            resValue("dimen", "my_size_text", "30sp")
+        }
+        debug {
+            versionNameSuffix '-debug'
+            buildConfigField("String", "MY_BUILD_TYPE", "\"BETA\"")
+            resValue("dimen", "my_size_text", "20sp")
         }
     }
     compileOptions {
@@ -35,6 +49,23 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    flavorDimensions 'version', 'demo'
+    productFlavors {
+        free {
+            dimension 'version'
+            versionNameSuffix '.free'
+        }
+        paid {
+            dimension 'version'
+            versionNameSuffix '.paid'
+        }
+        demo {
+            dimension 'demo'
+        }
+        pro {
+            dimension 'demo'
+        }
     }
     buildTypes.each {
         Properties properties = new Properties()
